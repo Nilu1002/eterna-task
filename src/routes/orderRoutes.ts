@@ -13,7 +13,14 @@ const createOrderSchema = z.object({
 
 export async function orderRoutes(app: FastifyInstance) {
   app.post('/api/orders/execute', async (request, reply) => {
-    const body = createOrderSchema.parse(request.body);
+    const result = createOrderSchema.safeParse(request.body);
+    if (!result.success) {
+      return reply.code(400).send({
+        error: 'Validation Error',
+        details: result.error.format(),
+      });
+    }
+    const body = result.data;
     const job = await submitOrder(body);
     reply.code(202).send({
       orderId: job.id,
@@ -25,9 +32,9 @@ export async function orderRoutes(app: FastifyInstance) {
   app.get<{ Params: { orderId: string } }>(
     '/api/orders/:orderId/status',
     { websocket: true },
-    (socket: WebSocket, request: FastifyRequest<{ Params: { orderId: string } }>) => {
+    async (socket: WebSocket, request: FastifyRequest<{ Params: { orderId: string } }>) => {
       const { orderId } = request.params;
-      const previous = getOrderHistory(orderId);
+      const previous = await getOrderHistory(orderId);
       socket.send(
         JSON.stringify({
           type: 'history',
@@ -52,12 +59,11 @@ export async function orderRoutes(app: FastifyInstance) {
     '/api/orders/:orderId/history',
     async (request, reply) => {
       const { orderId } = request.params;
-    const history = getOrderHistory(orderId);
-    reply.send({
-      orderId,
-      history,
-    });
+      const history = await getOrderHistory(orderId);
+      reply.send({
+        orderId,
+        history,
+      });
     }
   );
 }
-
