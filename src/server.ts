@@ -1,11 +1,17 @@
 import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
 import { config } from './config/env';
+import cors from '@fastify/cors';
 import { orderRoutes } from './routes/orderRoutes';
 
 export const buildServer = async () => {
   const app = Fastify({
     logger: true,
+  });
+
+  await app.register(cors, {
+    origin: ['http://localhost:8080', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
 
   await app.register(websocket);
