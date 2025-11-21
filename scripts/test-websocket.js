@@ -10,6 +10,9 @@ const WebSocket = require('ws');
 const BASE_URL = process.env.BASE_URL || 'http://localhost:4000';
 const WS_URL = BASE_URL.replace('http', 'ws');
 
+console.log(`Using BASE_URL: ${BASE_URL}`);
+
+
 const colors = {
   reset: '\x1b[0m',
   green: '\x1b[32m',

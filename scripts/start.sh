@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Run database migrations
+npx prisma migrate deploy
+
 # Start the worker in the background
 npm run start:worker &
 
