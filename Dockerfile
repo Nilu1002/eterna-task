@@ -42,8 +42,12 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/prisma ./prisma
 
+# Copy startup script
+COPY scripts/start.sh ./scripts/
+RUN chmod +x ./scripts/start.sh
+
 # Set environment variables
 ENV NODE_ENV=production
 
-# Default command (can be overridden)
-CMD ["npm", "start"]
+# Start both services
+CMD ["./scripts/start.sh"]
