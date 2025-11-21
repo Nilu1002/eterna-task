@@ -22,6 +22,8 @@ Market orders provide the clearest demo path for the execution engine because th
 - **Status bus & in-memory store** (`src/events/statusBus.ts`, `src/store/orderStore.ts`)
   - Persists status history for HTTP retrieval and WebSocket replay.
 
+> **Note**: BullMQ requires `maxRetriesPerRequest: null` in Redis connection options for blocking operations. This is configured in `orderQueue.ts` and `orderWorker.ts`.
+
 > Swapping the mock router with real SDK calls (Raydium/Meteora) is isolated to `MockDexRouter`, the worker, and the environment config.
 
 ## Prerequisites
