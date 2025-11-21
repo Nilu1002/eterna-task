@@ -12,6 +12,11 @@ interface Order {
   createdAt: string;
 }
 
+// Get API base URL from environment variable or use relative path for development
+const getApiBaseUrl = () => {
+  return import.meta.env.VITE_API_URL || '';
+};
+
 function App() {
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
   const [orderStatus, setOrderStatus] = useState<string>('pending');
@@ -24,7 +29,8 @@ function App() {
   const handleOrderSubmit = async (data: any) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/orders/execute', {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/api/orders/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -62,8 +68,20 @@ function App() {
     }
 
     // Connect to WebSocket
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/api/orders/${activeOrderId}/status`;
+    const apiBaseUrl = getApiBaseUrl();
+    let wsUrl: string;
+    
+    if (apiBaseUrl) {
+      // Production: use the backend URL from environment variable
+      const backendUrl = new URL(apiBaseUrl);
+      const protocol = backendUrl.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsUrl = `${protocol}//${backendUrl.host}/api/orders/${activeOrderId}/status`;
+    } else {
+      // Development: use relative path (will be proxied by Vite)
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsUrl = `${protocol}//${window.location.host}/api/orders/${activeOrderId}/status`;
+    }
+    
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
