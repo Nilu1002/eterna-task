@@ -15,7 +15,7 @@ interface Order {
 
 // Get API base URL from environment variable or use relative path for development
 const getApiBaseUrl = () => {
-  return import.meta.env.VITE_API_URL || 'https://eterna-backend-7c5v.onrender.com';
+  return import.meta.env.VITE_API_URL || 'http://localhost:3000';
 };
 
 function App() {

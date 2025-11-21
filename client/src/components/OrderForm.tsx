@@ -67,12 +67,20 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isLoading }) => 
                     </select>
                 </div>
 
-                <div className="order-form__swap-indicator">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M7 10l5-5 5 5" />
-                        <path d="M7 14l5 5 5-5" />
+                <button
+                    type="button"
+                    className="order-form__swap-indicator"
+                    onClick={() => {
+                        const temp = tokenIn;
+                        setTokenIn(tokenOut);
+                        setTokenOut(temp);
+                    }}
+                    title="Swap currencies"
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12M17 20l4-4M17 20l-4-4" />
                     </svg>
-                </div>
+                </button>
             </div>
 
             <button

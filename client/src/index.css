@@ -257,7 +257,15 @@ body {
   border-radius: 50%;
   color: var(--text-secondary);
   margin-bottom: 4px;
-  /* Align visually with inputs */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.order-form__swap-indicator:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+  transform: rotate(180deg);
 }
 
 .order-form__cta {
