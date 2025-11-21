@@ -27,27 +27,27 @@ Market orders provide the clearest demo path for the execution engine because th
 ## Prerequisites
 
 - Node.js 18+
-- Redis 7+ (BullMQ requires a Redis instance)
+- Docker (for Redis and PostgreSQL)
 
-## Setup
+## Quick Start
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Copy the example environment file and adjust if needed:
-   ```bash
-   cp env.example .env
-   ```
-3. Start Redis (example via Docker):
-   ```bash
-   docker run --name redis-oe -p 6379:6379 redis:7
-   ```
-4. Start the API server and worker (two terminals):
-   ```bash
-   npm run dev
-   npm run worker
-   ```
+For a detailed step-by-step guide, please see [GUIDE.md](./GUIDE.md).
+
+1.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+2.  **Setup Environment**:
+    ```bash
+    cp env.example .env
+    # Start Databases & Initialize
+    npm run services:up
+    ```
+3.  **Start the API server and worker**:
+    ```bash
+    npm run dev
+    npm run worker
+    ```
 
 Build artifacts are produced with `npm run build`, and production processes can use `npm run start` / `npm run start:worker`.
 
