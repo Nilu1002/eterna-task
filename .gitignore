@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.env
+phrase.txt
+devnet-wallet.json
