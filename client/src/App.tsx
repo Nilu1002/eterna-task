@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { OrderForm } from './components/OrderForm';
 import { StatusTimeline } from './components/StatusTimeline';
 import { OrderHistory } from './components/OrderHistory';
@@ -14,7 +15,7 @@ interface Order {
 
 // Get API base URL from environment variable or use relative path for development
 const getApiBaseUrl = () => {
-  return import.meta.env.VITE_API_URL || '';
+  return import.meta.env.VITE_API_URL || 'http://localhost:3000';
 };
 
 function App() {
@@ -24,6 +25,23 @@ function App() {
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+
+  // Fetch history on mount
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const apiBaseUrl = getApiBaseUrl();
+        const res = await fetch(`${apiBaseUrl}/api/orders`);
+        if (res.ok) {
+          const data = await res.json();
+          setPastOrders(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch history:', err);
+      }
+    };
+    fetchHistory();
+  }, []);
 
   // Submit new order
   const handleOrderSubmit = async (data: any) => {
@@ -70,7 +88,7 @@ function App() {
     // Connect to WebSocket
     const apiBaseUrl = getApiBaseUrl();
     let wsUrl: string;
-    
+
     if (apiBaseUrl) {
       // Production: use the backend URL from environment variable
       const backendUrl = new URL(apiBaseUrl);
@@ -81,7 +99,7 @@ function App() {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       wsUrl = `${protocol}//${window.location.host}/api/orders/${activeOrderId}/status`;
     }
-    
+
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
@@ -113,28 +131,54 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="app__title">
+      <motion.h1
+        className="app__title"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         ⚡ Order Execution Engine
-      </h1>
+      </motion.h1>
 
       <div className="app__grid">
         <div className="app__column">
-          <OrderForm onSubmit={handleOrderSubmit} isLoading={isLoading} />
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <OrderForm onSubmit={handleOrderSubmit} isLoading={isLoading} />
+          </motion.div>
 
-          {activeOrderId && (
-            <StatusTimeline
-              status={orderStatus}
-              history={orderHistory}
-            />
-          )}
+          <AnimatePresence mode="wait">
+            {activeOrderId && (
+              <motion.div
+                key="status"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <StatusTimeline
+                  status={orderStatus}
+                  history={orderHistory}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="app__column">
-          <OrderHistory
-            orders={pastOrders}
-            selectedId={activeOrderId || undefined}
-            onSelectOrder={setActiveOrderId}
-          />
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <OrderHistory
+              orders={pastOrders}
+              selectedId={activeOrderId || undefined}
+              onSelectOrder={setActiveOrderId}
+            />
+          </motion.div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import WebSocket from 'ws';
 import { z } from 'zod';
-import { getOrderHistory, submitOrder } from '../services/orderService';
+import { getOrderHistory, submitOrder, getAllOrders } from '../services/orderService';
 import { statusBus } from '../events/statusBus';
 
 const createOrderSchema = z.object({
@@ -55,15 +55,8 @@ export async function orderRoutes(app: FastifyInstance) {
     }
   );
 
-  app.get<{ Params: { orderId: string } }>(
-    '/api/orders/:orderId/history',
-    async (request, reply) => {
-      const { orderId } = request.params;
-      const history = await getOrderHistory(orderId);
-      reply.send({
-        orderId,
-        history,
-      });
-    }
-  );
+  app.get('/api/orders', async (request, reply) => {
+    const orders = await getAllOrders();
+    reply.send(orders);
+  });
 }

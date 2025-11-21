@@ -65,5 +65,24 @@ export const orderStore = {
     // Let's check usages.
     return order;
   },
+  async getAll() {
+    const orders = await prisma.order.findMany({
+      include: {
+        events: {
+          orderBy: { timestamp: 'asc' },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return orders.map((order) => {
+      const lastEvent = order.events[order.events.length - 1];
+      return {
+        ...order,
+        status: lastEvent ? lastEvent.status : 'pending',
+        events: undefined, // Optional: remove events if not needed in list view to save bandwidth
+      };
+    });
+  },
 };
 

@@ -26,3 +26,7 @@ export const getOrderHistory = async (orderId: string) => {
   return await orderStore.getHistory(orderId);
 };
 
+export const getAllOrders = async () => {
+  return await orderStore.getAll();
+};
+
