@@ -2,6 +2,13 @@
 
 This project implements the **mock** option of the order execution engine described in `Backend Task 2_ Order Execution Engine.txt`. It focuses on the architecture (API → queue → worker) and real-time status streaming while simulating DEX routing logic.
 
+Sample Images:
+
+<img width="1728" height="1016" alt="image" src="https://github.com/user-attachments/assets/aa393922-5707-400a-9d5b-264fc197d6b3" />
+<img width="1727" height="1018" alt="image" src="https://github.com/user-attachments/assets/6641665b-0387-42f2-bd26-6ba0f6827138" />
+
+
+
 ## Why Market Orders?
 
 Market orders provide the clearest demo path for the execution engine because they skip order book persistence and execute immediately at the best available price. The same architecture can support:
@@ -103,6 +110,8 @@ Returns the same status timeline as JSON (useful for logs or dashboards).
 
 To test the mock order execution engine (as described in `Backend Task 2_ Order Execution Engine.txt`), you can use the provided WebSocket test script. This script simulates order submission and listens for real-time status updates via WebSocket.
 
+You can also navigate to https://eterna-task.onrender.com/ and test it out there.
+
 ### Running Locally
 
 ```bash
@@ -120,7 +129,7 @@ $env:BASE_URL="https://eterna-backend-7c5v.onrender.com"; node scripts/test-webs
 
 **Bash (Mac/Linux/Git Bash):**
 ```bash
-BASE_URL=https://your-app-name.onrender.com node scripts/test-websocket.js
+BASE_URL=https://eterna-backend-7c5v.onrender.com node scripts/test-websocket.js
 ```
 
 This will:
