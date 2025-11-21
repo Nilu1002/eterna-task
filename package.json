@@ -15,11 +15,17 @@
     "services:up": "docker-compose up -d && sleep 3 && npx prisma db push && npx prisma generate"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Nilu1002",
+    "url": "https://github.com/Nilu1002"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nilu1002/eterna-task.git"
+  },
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@fastify/static": "^7.0.1",
     "@fastify/websocket": "^11.2.0",
     "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
     "@metaplex-foundation/umi": "^1.4.1",

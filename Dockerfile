@@ -24,13 +24,6 @@ RUN npx prisma generate
 # Build the application
 RUN npm run build
 
-# Build client
-COPY client/package*.json ./client/
-RUN cd client && npm ci
-
-COPY client/ ./client/
-RUN cd client && npm run build
-
 # Remove development dependencies
 RUN npm prune --production
 
@@ -48,7 +41,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/client/dist ./client/dist
 
 # Copy startup script
 COPY scripts/start.sh ./scripts/
