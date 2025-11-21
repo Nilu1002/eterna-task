@@ -95,7 +95,9 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="app__title">⚡ Order Execution Engine</h1>
+      <h1 className="app__title">
+        ⚡ Order Execution Engine
+      </h1>
 
       <div className="app__grid">
         <div className="app__column">

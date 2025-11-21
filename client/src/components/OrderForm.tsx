@@ -67,7 +67,12 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isLoading }) => 
                     </select>
                 </div>
 
-                <div className="order-form__swap-indicator">⇅</div>
+                <div className="order-form__swap-indicator">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M7 10l5-5 5 5" />
+                        <path d="M7 14l5 5 5-5" />
+                    </svg>
+                </div>
             </div>
 
             <button

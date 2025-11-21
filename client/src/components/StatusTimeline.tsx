@@ -71,7 +71,13 @@ export const StatusTimeline: React.FC<StatusTimelineProps> = ({ status, history 
                 {STEPS.map((step, index) => (
                     <div key={step} className={getStepClass(index)}>
                         <div className={getIconClass(index)}>
-                            {index < currentStepIndex ? '✓' : index + 1}
+                            {index < currentStepIndex ? (
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            ) : (
+                                index + 1
+                            )}
                         </div>
                         <div className="status-timeline__text">
                             <div className={getLabelClass(index)}>{step.charAt(0).toUpperCase() + step.slice(1)}</div>
