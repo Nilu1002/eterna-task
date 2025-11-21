@@ -6,7 +6,9 @@ import { statusBus } from '../events/statusBus';
 import { OrderJobData } from '../types/order';
 import { delay } from '../utils/timing';
 
-const connection = new IORedis(config.redis.url);
+const connection = new IORedis(config.redis.url, {
+  maxRetriesPerRequest: null,
+});
 const router = new MockDexRouter();
 
 export const orderWorker = new Worker<OrderJobData>(
@@ -46,11 +48,26 @@ export const orderWorker = new Worker<OrderJobData>(
   }
 );
 
-orderWorker.on('failed', (job, error) => {
-  console.error(`Order ${job?.data.id} failed`, error.message);
+orderWorker.on('completed', (job) => {
+  console.log(`✅ Order ${job.data.id} completed successfully`);
 });
 
+orderWorker.on('failed', (job, error) => {
+  console.error(`❌ Order ${job?.data.id} failed:`, error.message);
+});
+
+orderWorker.on('error', (error) => {
+  console.error('Worker error:', error);
+});
+
+console.log(`🚀 Order Worker started`);
+console.log(`   Queue: ${config.queue.name}`);
+console.log(`   Concurrency: ${config.queue.concurrency}`);
+console.log(`   Redis: ${config.redis.url}`);
+console.log(`   Waiting for orders...\n`);
+
 process.on('SIGINT', async () => {
+  console.log('\n⏹️  Shutting down worker...');
   await orderWorker.close();
   await connection.quit();
   process.exit(0);
