@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis-oe
+    ports:
+      - "6379:6379"
+    restart: always
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-oe
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: order_engine
+    ports:
+      - "5432:5432"
+    restart: always

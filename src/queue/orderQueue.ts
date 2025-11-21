@@ -3,7 +3,9 @@ import IORedis from 'ioredis';
 import { config } from '../config/env';
 import { OrderJobData } from '../types/order';
 
-const connection = new IORedis(config.redis.url);
+const connection = new IORedis(config.redis.url, {
+  maxRetriesPerRequest: null,
+});
 
 export const orderQueue = new Queue<OrderJobData>(config.queue.name, { connection });
 
