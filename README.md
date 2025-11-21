@@ -99,6 +99,36 @@ Returns the same status timeline as JSON (useful for logs or dashboards).
 - Add authentication + rate limiting in Fastify.
 - Implement retry-aware error classification in the worker (`network`, `insufficient_funds`, etc.).
 
+## Testing Mock Functionality
+
+To test the mock order execution engine (as described in `Backend Task 2_ Order Execution Engine.txt`), you can use the provided WebSocket test script. This script simulates order submission and listens for real-time status updates via WebSocket.
+
+### Running Locally
+
+```bash
+node scripts/test-websocket.js
+```
+
+### Running Against Deployed Backend (Render)
+
+To test against your deployed instance, set the `BASE_URL` environment variable:
+
+**PowerShell (Windows):**
+```powershell
+$env:BASE_URL="https://your-app-name.onrender.com"; node scripts/test-websocket.js
+```
+
+**Bash (Mac/Linux/Git Bash):**
+```bash
+BASE_URL=https://your-app-name.onrender.com node scripts/test-websocket.js
+```
+
+This will:
+1. Submit a market order to the API.
+2. Connect to the WebSocket status endpoint.
+3. Stream and display the order lifecycle events (`pending` -> `routing` -> `building` -> `submitted` -> `confirmed`).
+
+
 ## Testing & Next Steps
 
 - Add unit tests around `MockDexRouter`, the queue handler, and WebSocket lifecycle.
