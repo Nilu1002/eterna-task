@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: eterna-backend
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: PORT
+        value: 3000
+    region: oregon
+    branch: main
+
+  - type: worker
+    name: eterna-worker
+    runtime: docker
+    plan: free
+    dockerCommand: npm run start:worker
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+    region: oregon
+    branch: main
