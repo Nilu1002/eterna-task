@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  tokenIn   String
+  tokenOut  String
+  amount    Float
+  wallet    String?
+  orderType String   @default("market")
+  createdAt DateTime @default(now())
+  
+  events    OrderEvent[]
+
+  @@map("orders")
+}
+
+model OrderEvent {
+  id        String   @id @default(uuid())
+  orderId   String
+  status    String
+  detail    Json?
+  timestamp DateTime @default(now())
+
+  order     Order    @relation(fields: [orderId], references: [id])
+
+  @@map("order_events")
+}
