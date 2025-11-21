@@ -10,8 +10,8 @@ class StatusBus extends EventEmitter {
     this.setMaxListeners(0);
   }
 
-  emitStatus(orderId: string, status: OrderStatus, detail?: unknown) {
-    const update = orderStore.appendStatus(orderId, status, detail);
+  async emitStatus(orderId: string, status: OrderStatus, detail?: unknown) {
+    const update = await orderStore.appendStatus(orderId, status, detail);
     if (update) {
       super.emit(orderId, update);
     }
