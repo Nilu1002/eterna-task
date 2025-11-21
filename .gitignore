@@ -1,5 +1,5 @@
-node_modules/
-dist/
+node_modules
+# Keep environment variables out of version control
 .env
-phrase.txt
-devnet-wallet.json
+
+/src/generated/prisma

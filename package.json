@@ -9,7 +9,10 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "start:worker": "node dist/worker/orderWorker.js",
-    "test": "echo \"No tests yet\" && exit 0"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "services:up": "docker-compose up -d && sleep 3 && npx prisma db push"
   },
   "keywords": [],
   "author": "",
@@ -33,10 +36,16 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@prisma/client": "^7.0.0",
     "@types/node": "^24.10.1",
+    "@types/supertest": "^6.0.3",
     "@types/ws": "^8.18.1",
+    "prisma": "^7.0.0",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.12",
+    "vitest-mock-extended": "^3.1.0"
   }
 }
