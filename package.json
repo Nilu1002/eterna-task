@@ -25,6 +25,7 @@
     "@metaplex-foundation/umi-bundle-defaults": "^1.4.1",
     "@metaplex-foundation/umi-web3js-adapters": "^1.4.1",
     "@meteora-ag/dlmm": "^1.8.0",
+    "@prisma/client": "^5.22.0",
     "@solana/web3.js": "^1.98.4",
     "bn.js": "^5.2.2",
     "bs58": "^6.0.0",
@@ -36,7 +37,6 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@prisma/client": "^5.22.0",
     "@types/node": "^24.10.1",
     "@types/supertest": "^6.0.3",
     "@types/ws": "^8.18.1",
