@@ -15,14 +15,14 @@ export const submitOrder = async (payload: CreateOrderDto) => {
     createdAt: new Date().toISOString(),
   };
 
-  orderStore.save(job);
+  await orderStore.save(job);
   statusBus.emitStatus(orderId, 'pending', { note: 'Order queued for routing' });
   await enqueueOrder(job);
 
   return job;
 };
 
-export const getOrderHistory = (orderId: string) => {
-  return orderStore.getHistory(orderId);
+export const getOrderHistory = async (orderId: string) => {
+  return await orderStore.getHistory(orderId);
 };
 
