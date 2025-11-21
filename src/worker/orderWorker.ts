@@ -14,27 +14,27 @@ export const orderWorker = new Worker<OrderJobData>(
   async (job) => {
     const { id, payload } = job.data;
     try {
-      statusBus.emitStatus(id, 'routing', { message: 'Fetching DEX quotes' });
+      await statusBus.emitStatus(id, 'routing', { message: 'Fetching DEX quotes' });
       const quotes = await router.getQuotes(payload);
       const bestQuote = router.selectBestQuote(quotes);
-      statusBus.emitStatus(id, 'building', {
+      await statusBus.emitStatus(id, 'building', {
         chosenDex: bestQuote.dex,
         bestPrice: bestQuote.price,
         feeBps: bestQuote.feeBps,
       });
 
       await delay(400);
-      statusBus.emitStatus(id, 'submitted', {
+      await statusBus.emitStatus(id, 'submitted', {
         chosenDex: bestQuote.dex,
         note: 'Mock transaction broadcasted',
       });
 
       const execution = await router.executeSwap(payload, bestQuote);
-      statusBus.emitStatus(id, 'confirmed', execution);
+      await statusBus.emitStatus(id, 'confirmed', execution);
 
       return execution;
     } catch (error) {
-      statusBus.emitStatus(id, 'failed', {
+      await statusBus.emitStatus(id, 'failed', {
         reason: error instanceof Error ? error.message : 'Unknown error',
       });
       throw error;
