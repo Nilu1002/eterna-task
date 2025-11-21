@@ -115,7 +115,7 @@ To test against your deployed instance, set the `BASE_URL` environment variable:
 
 **PowerShell (Windows):**
 ```powershell
-$env:BASE_URL="https://your-app-name.onrender.com"; node scripts/test-websocket.js
+$env:BASE_URL="https://eterna-backend-7c5v.onrender.com"; node scripts/test-websocket.js
 ```
 
 **Bash (Mac/Linux/Git Bash):**
