@@ -15,7 +15,7 @@ interface Order {
 
 // Get API base URL from environment variable or use relative path for development
 const getApiBaseUrl = () => {
-  return import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  return import.meta.env.VITE_API_URL || 'https://eterna-backend-7c5v.onrender.com';
 };
 
 function App() {
@@ -24,7 +24,18 @@ function App() {
   const [orderHistory, setOrderHistory] = useState<any[]>([]);
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const wsRef = useRef<WebSocket | null>(null);
+
+  // Theme effect
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   // Fetch history on mount
   useEffect(() => {
@@ -131,56 +142,72 @@ function App() {
 
   return (
     <div className="app">
-      <motion.h1
-        className="app__title"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        ⚡ Order Execution Engine
-      </motion.h1>
+      <header className="app__header">
+        <div className="app__logo">
+          <span className="app__logo-icon">⚡</span>
+          <h1 className="app__title-text">Eterna Execution</h1>
+        </div>
+        <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+      </header>
 
-      <div className="app__grid">
-        <div className="app__column">
+      <main className="app__main">
+        <div className="app__top-row">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
+            className="app__section app__section--form"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
             <OrderForm onSubmit={handleOrderSubmit} isLoading={isLoading} />
           </motion.div>
 
-          <AnimatePresence mode="wait">
-            {activeOrderId && (
-              <motion.div
-                key="status"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                <StatusTimeline
-                  status={orderStatus}
-                  history={orderHistory}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div className="app__section app__section--status">
+            <AnimatePresence mode="wait">
+              {activeOrderId ? (
+                <motion.div
+                  key="status"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <StatusTimeline
+                    status={orderStatus}
+                    history={orderHistory}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  className="status-placeholder glass-panel"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <div className="status-placeholder__content">
+                    <span className="status-placeholder__icon">📡</span>
+                    <h3>Ready to Execute</h3>
+                    <p>Submit an order to track its status in real-time.</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
-        <div className="app__column">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <OrderHistory
-              orders={pastOrders}
-              selectedId={activeOrderId || undefined}
-              onSelectOrder={setActiveOrderId}
-            />
-          </motion.div>
-        </div>
-      </div>
+        <motion.div
+          className="app__bottom-row"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <OrderHistory
+            orders={pastOrders}
+            selectedId={activeOrderId || undefined}
+            onSelectOrder={setActiveOrderId}
+          />
+        </motion.div>
+      </main>
     </div>
   );
 }

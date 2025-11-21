@@ -14,9 +14,24 @@ interface OrderHistoryProps {
 }
 
 export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onSelectOrder, selectedId }) => {
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const itemsPerPage = 5;
+
+    // Reset to first page when orders change (optional, but good for new orders)
+    React.useEffect(() => {
+        if (currentPage === 1) return;
+        // If we want to stay on the current page unless it's out of bounds:
+        const maxPage = Math.ceil(orders.length / itemsPerPage) || 1;
+        if (currentPage > maxPage) setCurrentPage(maxPage);
+    }, [orders.length]);
+
     if (orders.length === 0) {
         return null;
     }
+
+    const totalPages = Math.ceil(orders.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
 
     const getStatusClass = (status: string) => {
         const key = status?.toLowerCase();
@@ -29,7 +44,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onSelectOrde
         <div className="order-history glass-panel">
             <h3 className="order-history__title">Recent Orders</h3>
             <div className="order-history__list">
-                {orders.map((order) => (
+                {currentOrders.map((order) => (
                     <div
                         key={order.id}
                         className={`order-history__item ${selectedId === order.id ? 'is-selected' : ''}`}
@@ -49,6 +64,28 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onSelectOrde
                     </div>
                 ))}
             </div>
+
+            {totalPages > 1 && (
+                <div className="pagination">
+                    <button
+                        className="pagination__button"
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span className="pagination__info">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        className="pagination__button"
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

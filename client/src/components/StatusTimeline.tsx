@@ -8,8 +8,9 @@ interface StatusTimelineProps {
 const STEPS = ['pending', 'routing', 'building', 'submitted', 'confirmed'];
 
 export const StatusTimeline: React.FC<StatusTimelineProps> = ({ status, history }) => {
-    const currentStepIndex = STEPS.indexOf(status);
-    const isFailed = status === 'failed';
+    const normalizedStatus = status?.toLowerCase() || 'pending';
+    const currentStepIndex = STEPS.indexOf(normalizedStatus);
+    const isFailed = normalizedStatus === 'failed';
 
     const getStepClass = (index: number) => {
         const classes = ['status-timeline__step'];
